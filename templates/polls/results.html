@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3>{{ poll.title }} — Results</h3>
+                <p class="text-muted">Total votes: {{ total_votes }}</p>
+
+                <canvas id="resultsChart" height="200"></canvas>
+
+                <ul class="list-group mt-4">
+                    {% for item in results_data %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ item.option.text }}</span>
+                        <span class="badge bg-primary">{{ item.count }} votes ({{ item.percent }}%)</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <a href="{% url 'polls:home' %}" class="btn btn-outline-primary mt-4">Back to Polls</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const labels = [{% for item in results_data %}"{{ item.option.text }}",{% endfor %}];
+const data = [{% for item in results_data %}{{ item.count }},{% endfor %}];
+
+new Chart(document.getElementById('resultsChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Votes',
+            data: data,
+            backgroundColor: 'rgba(13, 110, 253, 0.7)',
+            borderRadius: 5,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+});
+</script>
+{% endblock %}

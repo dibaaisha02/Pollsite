@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3>{{ poll.title }}</h3>
+                <p class="text-muted">{{ poll.description }}</p>
+
+                {% if user_vote %}
+                    <div class="alert alert-info">You already voted on this poll. <a href="{% url 'polls:results' poll.pk %}">See results</a></div>
+                {% elif user.is_authenticated %}
+                    <form method="POST" action="{% url 'polls:vote' poll.pk %}">
+                        {% csrf_token %}
+                        {% for option in poll.options.all %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="option" value="{{ option.pk }}" id="option{{ option.pk }}">
+                                <label class="form-check-label" for="option{{ option.pk }}">{{ option.text }}</label>
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary mt-3">Submit Vote</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">Please <a href="{% url 'accounts:login' %}">login</a> to vote.</div>
+                {% endif %}
+
+                <a href="{% url 'polls:results' poll.pk %}" class="btn btn-outline-secondary mt-3">View Results</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="mb-4">Create a Poll</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <hr>
+                    <h5>Options</h5>
+                    <div id="options-container">
+                        <input type="text" name="options" class="form-control mb-2" placeholder="Option 1">
+                        <input type="text" name="options" class="form-control mb-2" placeholder="Option 2">
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addOption()">+ Add Option</button>
+                    <br>
+                    <button type="submit" class="btn btn-primary w-100">Create Poll</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let count = 3;
+function addOption() {
+    const container = document.getElementById('options-container');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'options';
+    input.className = 'form-control mb-2';
+    input.placeholder = `Option ${count++}`;
+    container.appendChild(input);
+}
+</script>
+{% endblock %}
